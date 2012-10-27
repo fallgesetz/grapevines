@@ -1,4 +1,4 @@
-import datetime
+import urllib
 
 class Params(object):
     """
@@ -8,8 +8,7 @@ class Params(object):
     def __init__(self, symbol):
         self.params_dict = {}
         # fields to show in the csv
-        self.fields = {}
-        self.symbol(symbol)
+        self.symbol(symbol).fields('d','c','v','o','h','l')
 
     def symbol(self, symbol):
         self.params_dict['q'] = symbol
@@ -34,7 +33,37 @@ class Params(object):
         self.params_dict['p'] = range
         return self
 
-    def fields(self, date=True, close=True, high=True, low=True, open=True, volume=True):
-        pass
+    def fields(self, *args):
+        """
+        Fields we've discovered
+        @d -- date
+        @c -- close
+        @h -- high
+        @l -- low
+        @o -- open
+        @v -- volume
+
+        e.g.
+        params.fields('d','c','v','o','h','l')
+        """
+        self.params_dict['f'] = ','.join(args)
+        return self
+
+    def sessions(self):
+        """
+        not entirely sure how to get this
+        """
+        self.params_dict['sessions'] = 'ext_hours'
+        return self
+
+    def __str__(self):
+        return urllib.urlencode(self.params_dict)
+
+def SmartParams(Params):
+    """
+    fills in sane default values
+    """
+    pass
+
 
 
